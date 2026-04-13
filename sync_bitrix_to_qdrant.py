@@ -147,19 +147,30 @@ def make_point_id(entity_type: str, entity_id: str) -> str:
 
 
 def count_points(client: QdrantClient, collection_name: str, entity_type: str) -> int:
-    result = client.count(
-        collection_name=collection_name,
-        count_filter=models.Filter(
-            must=[
-                models.FieldCondition(
-                    key="entity_type",
-                    match=models.MatchValue(value=entity_type),
-                )
-            ]
-        ),
-        exact=True,
-    )
-    return result.count
+    total = 0
+    offset = None
+
+    while True:
+        points, offset = client.scroll(
+            collection_name=collection_name,
+            scroll_filter=models.Filter(
+                must=[
+                    models.FieldCondition(
+                        key="entity_type",
+                        match=models.MatchValue(value=entity_type),
+                    )
+                ]
+            ),
+            limit=100,
+            offset=offset,
+            with_payload=False,
+            with_vectors=False,
+        )
+        total += len(points)
+        if offset is None:
+            break
+
+    return total
 
 
 def upload_entities(

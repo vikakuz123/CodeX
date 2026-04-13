@@ -45,6 +45,32 @@ Copy-Item .env.example .env
 python .\sync_bitrix_to_qdrant.py
 ```
 
+## Поиск по данным
+
+После загрузки данных можно искать похожие компании и сделки:
+
+```powershell
+python .\search_qdrant.py "Москва"
+```
+
+Ограничить количество результатов:
+
+```powershell
+python .\search_qdrant.py "Москва" --limit 3
+```
+
+Искать только среди компаний:
+
+```powershell
+python .\search_qdrant.py "Москва" --entity-type company
+```
+
+Искать только среди сделок:
+
+```powershell
+python .\search_qdrant.py "тестовая сделка" --entity-type deal
+```
+
 ## Что попадет в Qdrant
 
 Каждая точка содержит:

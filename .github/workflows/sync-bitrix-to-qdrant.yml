@@ -1,0 +1,32 @@
+name: Sync Bitrix24 to Qdrant
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 */6 * * *"
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run sync
+        env:
+          BITRIX_WEBHOOK_BASE: ${{ secrets.BITRIX_WEBHOOK_BASE }}
+          QDRANT_URL: ${{ secrets.QDRANT_URL }}
+          QDRANT_API_KEY: ${{ secrets.QDRANT_API_KEY }}
+          QDRANT_COLLECTION: ${{ secrets.QDRANT_COLLECTION }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_EMBEDDING_MODEL: ${{ secrets.OPENAI_EMBEDDING_MODEL }}
+        run: python sync_bitrix_to_qdrant.py

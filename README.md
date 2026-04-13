@@ -67,6 +67,26 @@ git commit -m "Add Bitrix24 to Qdrant sync"
 git push -u origin main
 ```
 
+## GitHub Actions
+
+В репозитории уже добавлен workflow для автоматической синхронизации:
+
+- ручной запуск через `Actions` -> `Sync Bitrix24 to Qdrant` -> `Run workflow`
+- автоматический запуск каждые 6 часов
+
+Перед запуском нужно добавить в GitHub Secrets значения:
+
+- `BITRIX_WEBHOOK_BASE`
+- `QDRANT_URL`
+- `QDRANT_API_KEY`
+- `QDRANT_COLLECTION`
+- `OPENAI_API_KEY`
+- `OPENAI_EMBEDDING_MODEL`
+
+Добавить их можно в:
+
+- `GitHub` -> `CodeX` -> `Settings` -> `Secrets and variables` -> `Actions`
+
 ## Что еще нужно для полной автоматизации
 
 - GitHub token для push или GitHub Actions

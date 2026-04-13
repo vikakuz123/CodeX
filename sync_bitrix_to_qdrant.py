@@ -153,20 +153,12 @@ def count_points(client: QdrantClient, collection_name: str, entity_type: str) -
     while True:
         points, offset = client.scroll(
             collection_name=collection_name,
-            scroll_filter=models.Filter(
-                must=[
-                    models.FieldCondition(
-                        key="entity_type",
-                        match=models.MatchValue(value=entity_type),
-                    )
-                ]
-            ),
             limit=100,
             offset=offset,
-            with_payload=False,
+            with_payload=True,
             with_vectors=False,
         )
-        total += len(points)
+        total += sum(1 for point in points if (point.payload or {}).get("entity_type") == entity_type)
         if offset is None:
             break
 
